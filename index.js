@@ -2,18 +2,35 @@ var app = require('express')()
 var bodyParser = require('body-parser')
 var http = require('http').Server(app)
 var io = require('socket.io')(http)
-
+const cors = require('cors')
+const version = '/api/v1/'
 const server = app
 const port = 3013;
 
 // app.get('/', function (req, res) {
 //     res.sendfile('index.html')
 // })
+const corsOptions = {
+    origin: (origin, cb) => {
+        console.log(origin);
+        cb(null, true)
+    },
+    optionsSuccessStatus: 200,
+    credentials: true
+}
 
-server.use(bodyParser.json())
-server.use(bodyParser.urlencoded({
-    extended: true
+app.use(cors(corsOptions))
+
+server.use(bodyParser.json({
+    limit: '50mb'
 }))
+server.use(bodyParser.urlencoded({
+    extended: true,
+    limit: '50mb'
+}))
+var insert = require('./router/insert')
+
+app.use(version + 'insert', insert)
 
 io.on('connect', function (socket) {
     // Client ทำการเชื่อมต่อ
