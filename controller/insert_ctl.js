@@ -9,7 +9,7 @@ exports.add_locker = function () {
             var dbo = db.db("CoinLocker");
             dbo.collection("Locker").insertOne(data, function (err, res) {
                 if (err) throw err;
-                console.log("add duration success");
+                console.log("insert to database success");
                 db.close();
                 next()
             });
